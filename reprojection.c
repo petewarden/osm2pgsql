@@ -130,6 +130,8 @@ struct Projection_Info const *project_getprojinfo(void)
 void reproject(double *lat, double *lon)
 {
     double x[1], y[1], z[1];
+
+    printf("%.4f\t%.4f\n", *lat, *lon);
     
     /** Caution: This section is only correct if the source projection is lat/lon;
      *  so even if it looks like pj_source was just a variable, things break if
@@ -162,7 +164,7 @@ void reproject(double *lat, double *lon)
     
     pj_transform(pj_source, pj_target, 1, 1, x, y, z);
     
-    //printf("%.4f\t%.4f -> %.4f\t%.4f\n", *lat, *lon, y[0], x[0]);
+    printf("%.4f\t%.4f -> %.4f\t%.4f\n", *lat, *lon, y[0], x[0]);
     *lat = y[0];
     *lon = x[0];
 }
