@@ -50,34 +50,12 @@ struct tagDesc {
 
 static struct tagDesc exportTags[] = {
    {"name",    "text", 0},
-   {"place",   "text", 0},
-   {"landuse", "text", 1},
-   {"leisure", "text", 1},
-   {"natural", "text", 1},
-   {"man_made","text", 0},
-   {"waterway","text", 0},
-   {"highway", "text", 0},
-   {"foot",    "text", 0},
-   {"horse",   "text", 0},
-   {"bicycle", "text", 0},
-   {"motorcar","text", 0},
-   {"residence","text", 0},
-   {"railway", "text", 0},
-   {"amenity", "text", 1},
-   {"tourism", "text", 1},
-   {"learning","text", 0},
-   {"building","text", 1},
-   {"bridge",  "text", 0},
-   {"layer",   "text", 0},
-   {"junction","text", 0},
-   {"sport",   "text", 1},
-   {"route",   "text", 0},
-   {"aeroway", "text", 0}
+   {"country_code", "text", 0}
 };
 
 static const char *table_name_point = "planet_osm_point";
 static const char *table_name_line = "planet_osm_line";
-static const char *table_name_polygon = "planet_osm_polygon";
+static const char *table_name_polygon = "world_countries_polygon";
 
 #define MAX_ID_NODE (35000000)
 #define MAX_ID_SEGMENT (35000000)
