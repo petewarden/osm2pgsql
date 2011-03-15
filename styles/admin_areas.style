@@ -26,6 +26,6 @@
 # OsmType  Tag          DataType     Flags
 
 way        name         text         polygon
-way        state        text         polygon
-way        city         text         polygon
-
+way        code         text         polygon
+way        type         text         polygon
+way        country_code text         polygon
