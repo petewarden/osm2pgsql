@@ -71,7 +71,9 @@ static std::vector<double> areas;
 
 char *get_wkt_simple(osmNode *nodes, int count, int polygon) {
     GeometryFactory gf;
-    std::auto_ptr<CoordinateSequence> coords(gf.getCoordinateSequenceFactory()->create(0, 2));
+    std::size_t size(0);
+    std::size_t dimension(2);
+    std::auto_ptr<CoordinateSequence> coords(gf.getCoordinateSequenceFactory()->create(size, dimension));
 
     try
     {
@@ -113,7 +115,9 @@ char *get_wkt_simple(osmNode *nodes, int count, int polygon) {
 
 size_t get_wkt_split(osmNode *nodes, int count, int polygon, double split_at) {
     GeometryFactory gf;
-    std::auto_ptr<CoordinateSequence> coords(gf.getCoordinateSequenceFactory()->create(0, 2));
+    std::size_t size(0);
+    std::size_t dimension(2);
+    std::auto_ptr<CoordinateSequence> coords(gf.getCoordinateSequenceFactory()->create(size, dimension));
     double area;
     WKTWriter wktw;
     size_t wkt_size = 0;
@@ -143,7 +147,9 @@ size_t get_wkt_split(osmNode *nodes, int count, int polygon, double split_at) {
 
             double distance = 0;
             std::auto_ptr<CoordinateSequence> segment;
-            segment = std::auto_ptr<CoordinateSequence>(gf.getCoordinateSequenceFactory()->create(0, 2));
+            std::size_t size(0);
+            std::size_t dimension(2);
+            segment = std::auto_ptr<CoordinateSequence>(gf.getCoordinateSequenceFactory()->create(size, dimension));
             segment->add(coords->getAt(0));
             for(unsigned i=1; i<coords->getSize(); i++) {
                 segment->add(coords->getAt(i));
@@ -155,7 +161,7 @@ size_t get_wkt_split(osmNode *nodes, int count, int polygon, double split_at) {
                     areas.push_back(0);
                     wkt_size++;
                     distance=0;
-                    segment = std::auto_ptr<CoordinateSequence>(gf.getCoordinateSequenceFactory()->create(0, 2));
+                    segment = std::auto_ptr<CoordinateSequence>(gf.getCoordinateSequenceFactory()->create(size, dimension));
                     segment->add(coords->getAt(i));
                 }
             }
@@ -253,7 +259,7 @@ int parse_wkt(const char * wkt, struct osmNode *** xnodes, int ** xcount, int * 
             case GEOS_MULTIPOINT:
                 // Drop through
             case GEOS_MULTILINESTRING:
-                gc = (GeometryCollection *) geometry;
+                gc = dynamic_cast<GeometryCollection *>(geometry);
                 num_geometries = gc->getNumGeometries();
                 *xnodes = (struct osmNode **) malloc((num_geometries + 1) * sizeof(struct osmNode *));
                 *xcount = (int *) malloc(num_geometries * sizeof(int));
@@ -309,7 +315,9 @@ size_t build_geometry(int osm_id, struct osmNode **xnodes, int *xcount, int make
     try
     {
         for (int c=0; xnodes[c]; c++) {
-            std::auto_ptr<CoordinateSequence> coords(gf.getCoordinateSequenceFactory()->create(0, 2));
+            std::size_t size(0);
+            std::size_t dimension(2);
+            std::auto_ptr<CoordinateSequence> coords(gf.getCoordinateSequenceFactory()->create(size, dimension));
             for (int i = 0; i < xcount[c]; i++) {
                 struct osmNode *nodes = xnodes[c];
                 Coordinate c;
@@ -358,7 +366,9 @@ size_t build_geometry(int osm_id, struct osmNode **xnodes, int *xcount, int make
                         //std::cerr << "polygon(" << osm_id << ") is no good: points(" << pline->getNumPoints() << "), closed(" << pline->isClosed() << "). " << writer.write(pline.get()) << std::endl;
                 double distance = 0;
                 std::auto_ptr<CoordinateSequence> segment;
-                segment = std::auto_ptr<CoordinateSequence>(gf.getCoordinateSequenceFactory()->create(0, 2));
+                std::size_t size(0);
+                std::size_t dimension(2);
+                segment = std::auto_ptr<CoordinateSequence>(gf.getCoordinateSequenceFactory()->create(size, dimension));
                 segment->add(pline->getCoordinateN(0));
                 for(unsigned i=1; i<pline->getNumPoints(); i++) {
                     segment->add(pline->getCoordinateN(i));
@@ -370,7 +380,7 @@ size_t build_geometry(int osm_id, struct osmNode **xnodes, int *xcount, int make
                         areas.push_back(0);
                         wkt_size++;
                         distance=0;
-                        segment = std::auto_ptr<CoordinateSequence>(gf.getCoordinateSequenceFactory()->create(0, 2));
+                        segment = std::auto_ptr<CoordinateSequence>(gf.getCoordinateSequenceFactory()->create(size, dimension));
                         segment->add(pline->getCoordinateN(i));
                     }
                 }
@@ -484,7 +494,7 @@ size_t build_geometry(int osm_id, struct osmNode **xnodes, int *xcount, int make
             {
                 for(unsigned i=0; i<toplevelpolygons; i++) 
                 {
-                    Polygon* poly = (Polygon*)polygons->at(i);
+                    Polygon* poly = dynamic_cast<Polygon*>(polygons->at(i));
                     std::string text = writer.write(poly);
                     wkts.push_back(text);
                     areas.push_back(poly->getArea());
